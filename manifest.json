@@ -1,0 +1,25 @@
+{
+  "name": "English Facile : apprendre l'anglais",
+  "short_name": "English Facile",
+  "description": "Apprends l'anglais pas à pas, même en partant de zéro.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF6DA",
+  "theme_color": "#0F6B45",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

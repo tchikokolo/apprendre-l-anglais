@@ -1,194 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apprendre l'anglais facilement</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    margin: 0;
-    padding: 16px;
-    color: #222;
-  }
-  .conteneur { max-width: 600px; margin: 0 auto; }
-  h1 { text-align: center; color: #1b5fd1; font-size: 26px; }
-  h2 { color: #1b5fd1; }
-  .intro { text-align: center; color: #555; margin-bottom: 20px; }
-  .carte {
-    background: white;
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  }
-  .mot-en { font-size: 28px; font-weight: bold; color: #1b5fd1; }
-  .mot-fr { font-size: 18px; margin: 4px 0; }
-  .pron { font-size: 18px; color: #d17a1b; margin-bottom: 10px; }
-  button {
-    font-size: 17px;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 4px 4px 0 0;
-  }
-  .btn-audio { background: #1b5fd1; color: white; }
-  .btn-lent { background: #2ea36b; color: white; }
-  .btn-principal {
-    background: #1b5fd1; color: white; width: 100%;
-    font-size: 19px; padding: 14px;
-  }
-  .option {
-    display: block; width: 100%; text-align: left;
-    background: #eef3fc; color: #222; font-size: 18px;
-  }
-  .bonne { background: #b9f0cf !important; }
-  .mauvaise { background: #f7c4c4 !important; }
-  .message { font-size: 18px; margin-top: 10px; min-height: 26px; }
-  .astuce {
-    background: #fff8e1; border-left: 5px solid #f5b400;
-    padding: 12px; border-radius: 8px; margin-bottom: 14px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>English Facile : apprends l'anglais pas à pas</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Application installable -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0F6B45">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="English Facile">
 </head>
 <body>
-<div class="conteneur">
 
-  <h1>🇬🇧 Apprendre l'anglais</h1>
-  <p class="intro">Pas à pas, à ton rythme. Zéro base, aucun problème !</p>
+  <header class="entete">
+    <a href="#/" class="logo">🇬🇧 English Facile</a>
+    <nav>
+      <a href="#/">Programme</a>
+      <button id="btn-installer" style="display:none; background:#F5B400; color:#3a2a00; font-size:14px; padding:8px 12px; margin:0 0 0 10px; box-shadow:none;">📲 Installer</button>
+    </nav>
+  </header>
 
-  <h2>Leçon 1 : Les salutations</h2>
+  <main id="app"></main>
 
-  <div class="astuce">
-    💡 <b>Astuce :</b> appuie sur 🐢 pour écouter lentement, autant de fois que tu veux.
-    Pour le « th » (comme dans <i>Thank</i>), mets le bout de la langue entre les dents.
-  </div>
+  <footer class="pied-site">
+    <p>English Facile · Apprendre l'anglais à ton rythme 💙</p>
+  </footer>
 
-  <div id="liste-mots"></div>
+  <!-- Les cours (un fichier par période) -->
+  <script src="data/semaines-01-04.js"></script>
 
-  <h2>🎯 Quiz de la leçon 1</h2>
-  <div class="carte" id="zone-quiz">
-    <button class="btn-principal" onclick="lancerQuiz()">Commencer le quiz</button>
-  </div>
+  <!-- Le moteur du site -->
+  <script src="app.js"></script>
 
-</div>
-
-<script>
-  // ---------- LES MOTS DE LA LEÇON ----------
-  const mots = [
-    { en: "Hello",        fr: "Bonjour / Salut",      pron: "hé-lô" },
-    { en: "Good morning", fr: "Bonjour (le matin)",   pron: "goud mor-nigne" },
-    { en: "Goodbye",      fr: "Au revoir",            pron: "goud-baï" },
-    { en: "Thank you",    fr: "Merci",                pron: "sank iou" },
-    { en: "Please",       fr: "S'il vous plaît",      pron: "pliz" },
-    { en: "Sorry",        fr: "Désolé",               pron: "so-ri" },
-    { en: "Yes",          fr: "Oui",                  pron: "yèss" },
-    { en: "No",           fr: "Non",                  pron: "nô" }
-  ];
-
-  // ---------- AUDIO ----------
-  function parler(texte, vitesse) {
-    if (!("speechSynthesis" in window)) {
-      alert("Ton navigateur ne peut pas lire l'audio. Essaie avec Chrome.");
-      return;
+  <!-- Installation comme application -->
+  <script>
+    // Mode hors-ligne
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () {});
+      });
     }
-    window.speechSynthesis.cancel();
-    const voix = new SpeechSynthesisUtterance(texte);
-    voix.lang = "en-US";
-    voix.rate = vitesse;
-    window.speechSynthesis.speak(voix);
-  }
 
-  // ---------- AFFICHER LES MOTS ----------
-  function afficherMots() {
-    const zone = document.getElementById("liste-mots");
-    zone.innerHTML = "";
-    mots.forEach((m, i) => {
-      zone.innerHTML += `
-        <div class="carte">
-          <div class="mot-en">${m.en}</div>
-          <div class="mot-fr">➡️ ${m.fr}</div>
-          <div class="pron">🗣️ Se dit : « ${m.pron} »</div>
-          <button class="btn-audio" onclick="parler(mots[${i}].en, 0.9)">🔊 Normal</button>
-          <button class="btn-lent" onclick="parler(mots[${i}].en, 0.5)">🐢 Lent</button>
-        </div>`;
+    // Bouton « Installer »
+    var promptInstall = null;
+    var bouton = document.getElementById("btn-installer");
+    var estIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    var dejaInstallee = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      promptInstall = e;
+      if (!dejaInstallee) bouton.style.display = "inline-block";
     });
-  }
 
-  // ---------- QUIZ ----------
-  let questions = [];
-  let numero = 0;
-  let score = 0;
+    if (estIOS && !dejaInstallee) bouton.style.display = "inline-block";
 
-  function melanger(tableau) {
-    return [...tableau].sort(() => Math.random() - 0.5);
-  }
+    bouton.onclick = function () {
+      if (promptInstall) {
+        promptInstall.prompt();
+        promptInstall.userChoice.then(function () {
+          promptInstall = null;
+          bouton.style.display = "none";
+        });
+      } else {
+        alert("Sur iPhone : appuie sur le bouton Partager (le carré avec une flèche), puis sur « Sur l'écran d'accueil ».");
+      }
+    };
 
-  function lancerQuiz() {
-    questions = melanger(mots).slice(0, 5);
-    numero = 0;
-    score = 0;
-    afficherQuestion();
-  }
-
-  function afficherQuestion() {
-    const zone = document.getElementById("zone-quiz");
-
-    if (numero >= questions.length) {
-      let encouragement = score === questions.length
-        ? "🏆 Parfait ! Tu es très fort !"
-        : score >= 3
-          ? "👏 Bravo, tu progresses bien !"
-          : "💪 Continue, c'est en pratiquant qu'on apprend !";
-      zone.innerHTML = `
-        <h3>Résultat : ${score} / ${questions.length}</h3>
-        <p class="message">${encouragement}</p>
-        <button class="btn-principal" onclick="lancerQuiz()">🔄 Recommencer</button>`;
-      return;
-    }
-
-    const bonne = questions[numero];
-    const autres = melanger(mots.filter(m => m.en !== bonne.en)).slice(0, 2);
-    const options = melanger([bonne, ...autres]);
-
-    zone.innerHTML = `
-      <p>Question ${numero + 1} / ${questions.length}</p>
-      <p style="font-size:22px"><b>Que veut dire « ${bonne.en} » ?</b></p>
-      <button class="btn-lent" onclick="parler('${bonne.en}', 0.5)">🐢 Écouter</button>
-      <div id="options" style="margin-top:12px"></div>
-      <div class="message" id="message"></div>`;
-
-    const zoneOptions = document.getElementById("options");
-    options.forEach(o => {
-      const bouton = document.createElement("button");
-      bouton.className = "option";
-      bouton.textContent = o.fr;
-      bouton.onclick = () => repondre(bouton, o.en === bonne.en, bonne);
-      zoneOptions.appendChild(bouton);
+    window.addEventListener("appinstalled", function () {
+      bouton.style.display = "none";
     });
-  }
-
-  function repondre(bouton, estBonne, bonne) {
-    const tous = document.querySelectorAll("#options .option");
-    tous.forEach(b => b.disabled = true);
-    const message = document.getElementById("message");
-
-    if (estBonne) {
-      bouton.classList.add("bonne");
-      message.textContent = "✅ Bravo !";
-      score++;
-    } else {
-      bouton.classList.add("mauvaise");
-      message.textContent = "❌ Pas grave ! La bonne réponse : " + bonne.fr;
-    }
-
-    setTimeout(() => { numero++; afficherQuestion(); }, 1800);
-  }
-
-  afficherMots();
-</script>
+  </script>
 </body>
 </html>
